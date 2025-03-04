@@ -6,6 +6,8 @@ import os
 
 UPLOAD_SINGLE_URL = "http://127.0.0.1:8000/files/upload/"
 UPLOAD_MULTIPLE_URL = "http://127.0.0.1:8000/files/upload-multiple/"
+QUERY_API_URL = "http://localhost:8000/query/ask"
+
 
 ALLOWED_EXTENSIONS = ["json", "pdf", "txt", "jpg", "jpeg", "png", "docx", "csv", "xls", "xlsx"]
 
@@ -39,38 +41,29 @@ st.sidebar.write(f"📚 **Vector Store:** {st.session_state['vector_store']}")
 st.sidebar.write(f"🤖 **Generator:** {st.session_state['generator']}")
 
 # Tabs for different functionalities
-tab1, tab2, tab3 = st.tabs(["🔍 Ask Questions", "📂 Upload Documents",  "📜 Query History"])
+tab1, tab2 = st.tabs(["🔍 Ask Questions", "📂 Upload Documents"])
 
 # ✅ **Tab 1: Ask Questions & Retrieve Answers**
 with tab1:
-    st.header("🔍 Ask a Question")
+    st.header("🔍 Ask Question")
 
     question = st.text_input("Enter your question:")
 
     if st.button("Get Answer"):
-        response = requests.get(
-            "http://localhost:8000/answer/",
-            params={
-                "question": question,
-                "retriever_name": st.session_state["vector_store"],
-                "generator_name": st.session_state["generator"],
-                "embedding_name": st.session_state["embedding_model"],
+        response = requests.post(
+            QUERY_API_URL,
+            json={  # ✅ Include additional parameters
+                "query": question,
+                "retriever_name": st.session_state.get("vector_store", "default_retriever"),
+                "generator_name": st.session_state.get("generator", "default_generator"),
+                "embedding_name": st.session_state.get("embedding_model", "default_embedding"),
             },
+            headers={"Content-Type": "application/json"}
         )
 
         if response.status_code == 200:
-            answer = response.json()["answer"]
-            st.write(f"**Answer:** {answer}")
-
-            # Store query in session state
-            st.session_state["query_history"].append({
-                "question": question,
-                "answer": answer,
-                "retriever": st.session_state["vector_store"],
-                "generator": st.session_state["generator"],
-                "embedding": st.session_state["embedding_model"],
-            })
-
+            answer = response.json()["response"]
+            st.write(f"**AI Response:** {answer}")
         else:
             st.error("❌ Error retrieving answer.")
 
@@ -102,16 +95,3 @@ with tab2:
             st.error(f"Upload failed: {response.json()['detail']}")
 
 
-# ✅ **Tab 3: Query History**
-with tab3:
-    st.header("📜 Query History")
-
-    if st.session_state["query_history"]:
-        for i, entry in enumerate(reversed(st.session_state["query_history"])):
-            with st.expander(f"🔹 Query {len(st.session_state['query_history']) - i}: {entry['question']}"):
-                st.write(f"**Answer:** {entry['answer']}")
-                st.write(f"📚 **Retriever:** {entry['retriever']}")
-                st.write(f"🤖 **Generator:** {entry['generator']}")
-                st.write(f"🛠️ **Embedding Model:** {entry['embedding']}")
-    else:
-        st.write("No queries found.")

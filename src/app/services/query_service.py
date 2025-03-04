@@ -18,13 +18,15 @@ gemini_llm = ChatGoogleGenerativeAI(
     top_k=32
 )
 
-# gemini_llm.invoke(["who are you?"])
-def process_user_query(user_query: str) -> str:
-    """
-    Processes user queries using an LLM.
-    """
-    # llm = OpenAI(model_name="gpt-4", openai_api_key=settings.OPENAI_API_KEY)  
 
-    response = gemini_llm.invoke(user_query)  # Get LLM-generated response
-    
-    return response.content
+
+def process_user_query(user_query: str, retriever_name: str = None, generator_name: str = None, embedding_name: str = None) -> str:
+    """
+    Processes user queries using an LLM with additional parameters.
+    """
+    # Log parameters (optional for debugging)
+    print(f"Query: {user_query}, Retriever: {retriever_name}, Generator: {generator_name}, Embedding: {embedding_name}")
+
+    response = gemini_llm.invoke(user_query)  
+    return response.content  # ✅ Return extracted text content
+
