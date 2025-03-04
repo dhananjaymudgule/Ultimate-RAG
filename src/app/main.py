@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 # from app.api.routes import user, items, upload_router
-from src.app.api.routes import upload_router
+from src.app.api.routes import upload_router, query  
 
 from src.app.core.config import settings
 
@@ -29,6 +29,7 @@ app.add_middleware(
 
 # Include the upload router
 app.include_router(upload_router, prefix="/files", tags=["File Uploads"])
+app.include_router(query.router, prefix="/query", tags=["Query Handling"])  
 
 # Root endpoint
 @app.get("/", tags=["Health Check"])

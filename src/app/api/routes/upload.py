@@ -2,6 +2,9 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 import os
 import shutil
 from typing import List
+from src.app.core.config import settings  
+
+
 
 router = APIRouter()
 
@@ -11,8 +14,8 @@ ALLOWED_EXTENSIONS = {
 }
 
 # Upload directory
-UPLOAD_DIR = "uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)  # Ensure upload directory exists
+UPLOAD_DIR = settings.UPLOAD_DIR  
+
 
 @router.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
