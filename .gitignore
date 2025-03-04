@@ -138,6 +138,8 @@ venv.bak/
 
 ultimate/
 
+uploads/
+
 # Spyder project settings
 .spyderproject
 .spyproject
