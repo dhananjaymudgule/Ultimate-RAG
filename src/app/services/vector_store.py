@@ -8,13 +8,12 @@ from pinecone import Pinecone, ServerlessSpec
 
 from src.app.core.config import settings
 from src.app.utils.logger import logger
-from src.app.services.file_processors.json_processor import convert_json_to_doc  # ✅ Modify if handling other file types
 
-# ✅ Initialize Pinecone
+#  Initialize Pinecone
 pc = Pinecone(api_key=settings.PINECONE_API_KEY)
 index_name = "career-advisory-service"
 
-# ✅ Ensure the index exists
+#  Ensure the index exists
 existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
 if index_name not in existing_indexes:
     pc.create_index(
@@ -28,7 +27,7 @@ if index_name not in existing_indexes:
 
 
 
-# ✅ Initialize Embedding Model
+#  Initialize Embedding Model
 gemini_embedding_model = GoogleGenerativeAIEmbeddings(
     model=settings.GEMINI_EMBEDDING_MODEL_NAME,
     google_api_key=settings.GEMINI_API_KEY

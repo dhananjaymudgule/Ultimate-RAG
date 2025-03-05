@@ -10,7 +10,7 @@ from src.app.services.vector_store import pc_vector_store
 from src.app.core.config import settings
 from src.app.utils.logger import logger
 
-# Function to get the correct retriever dynamically
+# get the correct retriever 
 def get_retriever(retriever_name: str):
     
     try:

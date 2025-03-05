@@ -8,7 +8,7 @@ from src.app.core.config import settings
 from src.app.utils.logger import logger
 
 from src.app.services.file_handler import process_uploaded_file  
-from src.app.services.vector_store import store_document_embeddings  # ✅ Import vector storage function
+from src.app.services.vector_store import store_document_embeddings  
 
 
 
@@ -33,16 +33,15 @@ async def upload_file(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {file_extension}")
 
     # Save the file
-    # file_path = os.path.join(UPLOAD_DIR, file.filename)
-    file_path = settings.UPLOAD_DIR / file.filename  # ✅ Uses correct absolute path
-    file_path = settings.UPLOAD_DIR / file.filename
+    file_path = os.path.join(UPLOAD_DIR, file.filename)
+    
     logger.info(f"Saving file to: {file_path}") 
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
     try:
-        processed_data = process_uploaded_file(file_path)  # ✅ Process file
+        processed_data = process_uploaded_file(file_path)  # Process file
 
         #  Store embeddings if it's a JSON file (Modify for other types later)
         if file_extension == "json":
@@ -55,7 +54,7 @@ async def upload_file(file: UploadFile = File(...)):
             "content_type": file.content_type,
             "message": "File uploaded and processed successfully!",
             "processed_data": processed_data,
-            "embedding_result": embedding_result  # ✅ Include embedding result in response
+            "embedding_result": embedding_result  
         }
     
     except ValueError as e:
@@ -80,9 +79,7 @@ async def upload_multiple_files(files: List[UploadFile] = File(...)):
             raise HTTPException(status_code=400, detail=f"Unsupported file type: {file.filename}")
 
         # Save the file
-        # file_path = os.path.join(UPLOAD_DIR, file.filename)
-        file_path = settings.UPLOAD_DIR / file.filename  # ✅ Uses correct absolute path
-
+        file_path = os.path.join(UPLOAD_DIR, file.filename)
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 

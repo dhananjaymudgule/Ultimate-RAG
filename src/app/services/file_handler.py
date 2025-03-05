@@ -9,7 +9,7 @@ def process_uploaded_file(file_path: Path):
     """
     Detects the file type and processes it accordingly.
     """
-    file_path = Path(file_path)  #  Convert string to Path object
+    file_path = Path(file_path)  # Convert string to Path object
     file_extension = file_path.suffix.lower()
 
     if file_extension == ".json":

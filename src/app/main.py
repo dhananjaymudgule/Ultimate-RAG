@@ -24,10 +24,7 @@ app.add_middleware(
 )
 
 # Include API routers
-# app.include_router(user.router, prefix="/users", tags=["Users"])
-# app.include_router(items.router, prefix="/items", tags=["Items"])
 
-# Include the upload router
 app.include_router(upload_router, prefix="/files", tags=["File Uploads"])
 app.include_router(query.router, prefix="/query", tags=["Query Handling"])  
 
