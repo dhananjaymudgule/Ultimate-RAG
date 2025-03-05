@@ -33,7 +33,11 @@ async def upload_file(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {file_extension}")
 
     # Save the file
-    file_path = os.path.join(UPLOAD_DIR, file.filename)
+    # file_path = os.path.join(UPLOAD_DIR, file.filename)
+    file_path = settings.UPLOAD_DIR / file.filename  # ✅ Uses correct absolute path
+    file_path = settings.UPLOAD_DIR / file.filename
+    logger.info(f"Saving file to: {file_path}") 
+
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
@@ -76,7 +80,9 @@ async def upload_multiple_files(files: List[UploadFile] = File(...)):
             raise HTTPException(status_code=400, detail=f"Unsupported file type: {file.filename}")
 
         # Save the file
-        file_path = os.path.join(UPLOAD_DIR, file.filename)
+        # file_path = os.path.join(UPLOAD_DIR, file.filename)
+        file_path = settings.UPLOAD_DIR / file.filename  # ✅ Uses correct absolute path
+
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 

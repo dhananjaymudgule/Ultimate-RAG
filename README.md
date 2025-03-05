@@ -122,6 +122,5 @@ streamlit run app.py
 - ✅ Support **multiple LLMs dynamically (OpenAI, Gemini, Cohere, etc.)**
 - ✅ Improve **retrieval with advanced ranking algorithms (BM25, Hybrid Search)**
 
-## 📜 License
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
 

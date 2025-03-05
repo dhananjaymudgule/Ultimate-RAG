@@ -4,6 +4,9 @@ from pathlib import Path
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
+from src.app.utils.logger import logger
+
+
 # Load .env file
 load_dotenv()
 
@@ -22,14 +25,14 @@ class Settings(BaseSettings):
 
 
     # Base directory (Project root)
-    BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent  # Points to fastapi_project/
-
+    BASE_DIR: Path = Path(__file__).resolve().parents[3]  #  Go 4 levels up
+    logger.info(f"BASE_DIR: {BASE_DIR}")
     # Upload directory
     UPLOAD_DIR: Path = BASE_DIR / "uploads"
 
     class Config:
         env_file = ".env"  # Load environment variables from .env file
-        extra = "allow"  # ✅ Allows extra env variables to avoid validation errors
+        extra = "allow"  #  Allows extra env variables to avoid validation errors
 
 # Create `settings` instance
 settings = Settings()
