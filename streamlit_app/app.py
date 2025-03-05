@@ -5,10 +5,11 @@ import requests
 import os
 
 # FastAPI Backend URL
-
-UPLOAD_SINGLE_URL = "http://127.0.0.1:8000/files/upload/"
-UPLOAD_MULTIPLE_URL = "http://127.0.0.1:8000/files/upload-multiple/"
-QUERY_API_URL = "http://localhost:8000/query/ask"
+API_BASE_URL = "http://127.0.0.1:8000"
+# End points
+UPLOAD_SINGLE_URL = "{API_BASE_URL}/files/upload/"
+UPLOAD_MULTIPLE_URL = "{API_BASE_URL}/files/upload-multiple/"
+QUERY_API_URL = "{API_BASE_URL}/query/ask"
 
 
 ALLOWED_EXTENSIONS = ["json", "pdf", "txt", "jpg", "jpeg", "png", "docx", "csv", "xls", "xlsx"]
@@ -18,7 +19,10 @@ st.set_page_config(page_title="Ultimate RAG", layout="wide",  page_icon="🤖")
 
 st.title("🤖 Ultimate RAG")
 
-st.sidebar.title("🔝 Ultimate RAG")
+st.sidebar.title("⚙️ Application Settings")
+
+top_k = st.sidebar.slider("🔎 Top-K Results", min_value=1, max_value=10, value=3)
+temperature = st.sidebar.slider("🌡️ LLM Temperature", min_value=0.0, max_value=1.0, value=0.0)
 
 
 

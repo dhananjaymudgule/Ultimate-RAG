@@ -13,17 +13,17 @@ router = APIRouter()
 class QueryRequest(BaseModel):
     query: str
     
-
 #  Response Model
 class QueryResponse(BaseModel):
     response: str
+
 
 @router.post("/ask", response_model=QueryResponse)
 async def handle_user_query(request: QueryRequest):
     """
     Handles user queries using LLM-based retrieval and response generation.
     """
-    logger.info(f"Received query: {request.query}, Filters: {request.filters}")
+    logger.info(f"Received query: {request.query}")
 
     try:
         response = generate_response(question=request.query)
