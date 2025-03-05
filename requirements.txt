@@ -3,5 +3,20 @@ uvicorn
 python-dotenv
 pydantic
 pydantic-settings
-python-multipart  # Required for file uploads
+python-multipart 
 streamlit
+pywin32 
+
+pandas
+ragas
+
+langchain
+langchain-community
+langchain-huggingface 
+langchain-google-genai 
+langchain-groq 
+langchain-pinecone
+langchain-chroma
+langchain-qdrant
+qdrant-client
+hnswlib

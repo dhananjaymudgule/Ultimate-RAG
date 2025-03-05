@@ -1,3 +1,5 @@
+# app.py
+
 import streamlit as st
 import requests
 import os
@@ -19,31 +21,11 @@ st.title("🤖 Ultimate RAG")
 st.sidebar.title("🔝 Ultimate RAG")
 
 
-# Initialize session state for selections & history
-if "embedding_model" not in st.session_state:
-    st.session_state["embedding_model"] = "huggingface"
-if "vector_store" not in st.session_state:
-    st.session_state["vector_store"] = "chroma"
-if "generator" not in st.session_state:
-    st.session_state["generator"] = "gemini"
-if "query_history" not in st.session_state:
-    st.session_state["query_history"] = []  # Stores past queries & responses
-
-
-# Sidebar Configuration
-st.sidebar.header("⚙️ Configuration")
-st.session_state["embedding_model"] = st.sidebar.selectbox("Select Embedding Model", ["huggingface", "cohere", "openai"])
-st.session_state["vector_store"] = st.sidebar.selectbox("Select Vector Store", ["chroma", "faiss", "qdrant"])
-st.session_state["generator"] = st.sidebar.selectbox("Select Generator", ["gemini", "groq", "openai"])
-
-st.sidebar.write(f"🛠️ **Embedding:** {st.session_state['embedding_model']}")
-st.sidebar.write(f"📚 **Vector Store:** {st.session_state['vector_store']}")
-st.sidebar.write(f"🤖 **Generator:** {st.session_state['generator']}")
 
 # Tabs for different functionalities
 tab1, tab2 = st.tabs(["🔍 Ask Questions", "📂 Upload Documents"])
 
-# ✅ **Tab 1: Ask Questions & Retrieve Answers**
+# Tab 1: Ask Questions & Retrieve Answers
 with tab1:
     st.header("🔍 Ask Question")
 
@@ -52,11 +34,8 @@ with tab1:
     if st.button("Get Answer"):
         response = requests.post(
             QUERY_API_URL,
-            json={  # ✅ Include additional parameters
-                "query": question,
-                "retriever_name": st.session_state.get("vector_store", "default_retriever"),
-                "generator_name": st.session_state.get("generator", "default_generator"),
-                "embedding_name": st.session_state.get("embedding_model", "default_embedding"),
+            json={  
+                "query": question
             },
             headers={"Content-Type": "application/json"}
         )
@@ -69,7 +48,7 @@ with tab1:
 
 
 
-# ✅ **Tab 2: Upload & Embed Documents**
+# Tab 2: Upload & Embed Documents
 with tab2:
 
     st.header("📂 Upload Documents") 

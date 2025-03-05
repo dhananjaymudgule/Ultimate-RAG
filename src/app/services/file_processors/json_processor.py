@@ -1,6 +1,8 @@
 import json
 from langchain_core.documents import Document  
 from pathlib import Path
+from src.app.utils.logger import logger
+
 
 def convert_json_to_doc(file_path: Path):
     """

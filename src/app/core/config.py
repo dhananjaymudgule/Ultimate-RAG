@@ -1,3 +1,4 @@
+#src/app/core/config.py 
 import os
 from pathlib import Path
 from pydantic_settings import BaseSettings
@@ -17,6 +18,7 @@ class Settings(BaseSettings):
     PINECONE_API_KEY: str
     GEMINI_API_KEY: str
     GEMINI_LLM_MODEL_NAME: str
+    GEMINI_EMBEDDING_MODEL_NAME: str
 
 
     # Base directory (Project root)
