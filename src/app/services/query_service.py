@@ -4,6 +4,8 @@ from src.app.prompts.prompt_templates import chat_prompt
 from src.app.services.retrieval_service import retrieve_documents  
 from src.app.core.config import settings
 from src.app.utils.logger import logger
+from src.app.evaluators.log_time import log_latency
+from src.app.evaluators.log_queries import log_query
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from typing import Optional, Dict
@@ -28,7 +30,8 @@ def get_llm():
     
 
 # Generate Response
-def generate_response(question: str) -> str:
+@log_latency()
+def generate_response(question: str) -> dict:
     """
     Dynamically retrieves documents and generates an LLM response.
     """
@@ -51,7 +54,20 @@ def generate_response(question: str) -> str:
         #  Generate response
         response = llm.invoke(formatted_prompt)
 
-        return response.content
+        # Log query, context, and answer
+        log_query(retriever = "pinecone",
+                  generator = settings.GEMINI_LLM_MODEL_NAME, 
+                  question = question, 
+                  retrieved_context = docs_content, 
+                  generated_answer = response.content)
+        
+
+        final_response = {
+            "response": response.content,
+            "retrieved_context": docs_content
+            }
+
+        return final_response
     except Exception as e:
         logger.error(f"Error processing query '{question}': {str(e)}", exc_info=True)
 

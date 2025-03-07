@@ -13,9 +13,11 @@ router = APIRouter()
 class QueryRequest(BaseModel):
     query: str
     
-#  Response Model
+# Response Model
 class QueryResponse(BaseModel):
     response: str
+    retrieved_context: Optional[str] = None  # Make it optional to avoid issues if missing
+
 
 
 @router.post("/ask", response_model=QueryResponse)
@@ -28,7 +30,7 @@ async def handle_user_query(request: QueryRequest):
     try:
         response = generate_response(question=request.query)
 
-        return {"response": response}
+        return QueryResponse(**response)
 
     except Exception as e:
         logger.error(f"Error processing query '{request.query}': {str(e)}", exc_info=True)

@@ -27,7 +27,7 @@ if index_name not in existing_indexes:
 
 
 
-#  Initialize Embedding Model
+#  Initialize Embedding Model # 768
 gemini_embedding_model = GoogleGenerativeAIEmbeddings(
     model=settings.GEMINI_EMBEDDING_MODEL_NAME,
     google_api_key=settings.GEMINI_API_KEY

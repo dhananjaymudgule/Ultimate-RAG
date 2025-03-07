@@ -16,33 +16,43 @@ Ultimate-RAG is a **Retrieval-Augmented Generation (RAG) system** that enables i
 ULTIMATE-RAG/
 │── src/
 │   │── app/
-│   │   │── api/               # ✅ API routes
+│   │   │── api/
 │   │   │   │── routes/
-│   │   │   │   │── upload.py  # Handles file uploads
-│   │   │   │   │── query.py   # Handles LLM queries
-│   │   │   │── dependencies.py  # Dependency injection (if needed)
-│   │   │── core/              # ✅ Core configurations
-│   │   │   │── config.py      # App settings & environment variables
-│   │   │── services/          # ✅ Business logic
-│   │   │   │── vector_store.py # Vector database management
-│   │   │   │── retrieval_service.py # Retrieval logic from Pinecone
-│   │   │   │── query_service.py  # Query processing logic
-│   │   │   │── file_processors/  # ✅ Handles file-specific processing
-│   │   │   │   │── json_processor.py  # JSON processing logic
-│   │   │   │   │── pdf_processor.py   # (Future) PDF processing logic
-│   │   │   │── file_handler.py  # ✅ Detects file types & calls processors
-│   │   │── prompts/            # ✅ Stores LLM prompts
-│   │   │   │── prompt_templates.py # Defines system & human prompts
-│   │   │── utils/              # ✅ Utility functions (if needed)
-│   │── uploads/                # ✅ Stores uploaded files
-│── streamlit_app/              # ✅ Frontend UI (Streamlit)
-│   │── app.py                  # Streamlit interface
-│── ultimate/                   # Virtual environment
-│── .env                        # ✅ Environment variables
-│── requirements.txt            # Dependencies
-│── README.md                   # Project documentation
-│── LICENSE                     # License file
-│── .gitignore                  # Ignore unnecessary files
+│   │   │   │   │── upload.py           # Handles file uploads
+│   │   │   │   │── query.py            # Handles LLM queries
+│   │   │   │── dependencies.py         # Dependency injection (if needed)
+│   │   │── core/
+│   │   │   │── config.py               # App settings & environment variables
+│   │   │── services/
+│   │   │   │── vector_store.py         # Vector database management
+│   │   │   │── retrieval_service.py    # Retrieval logic from FAISS/Chroma/Pinecone
+│   │   │   │── query_service.py        # Query processing logic
+│   │   │   │── file_processors/
+│   │   │   │   │── json_processor.py   # JSON processing logic
+│   │   │   │   │── pdf_processor.py    # (Future) PDF processing logic
+│   │   │   │── file_handler.py         # Detects file types & calls processors
+│   │   │── evaluators/                 # ✅ Stores evaluation scripts
+│   │   │   │── log_time.py             # Logs retrieval & generation times
+│   │   │   │── log_queries.py          # Logs questions, context, answers
+│   │   │   │── rag_eval.py             # RAG evaluation metrics script
+│   │   │── prompts/
+│   │   │   │── prompt_templates.py     # Defines system & human prompts
+│   │   │── utils/
+│   │── uploads/                        # Stores uploaded files
+│   │── logs/                           # ✅ Stores system logs
+│   │   │── app.log                     # General application logs
+│── evaluations/                        # ✅ Stores evaluation CSVs
+│   │── retrieval_generation_times.csv  # Logs retrieval & generation times
+│   │── rag_results.csv                 # Stores questions, context, answers
+│── streamlit_app/
+│   │── app.py                          # Streamlit interface
+│── ultimate/                           # Virtual environment
+│── .env                                # Environment variables
+│── requirements.txt                    # Dependencies
+│── README.md                           # Project documentation
+│── LICENSE                             # License file
+│── .gitignore                          # Ignore unnecessary files
+
 ```
 
 ## 📦 Installation & Setup

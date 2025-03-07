@@ -1,0 +1,4 @@
+{
+    "top_k": 2,
+    "similarity_threshold": 1.0
+}
