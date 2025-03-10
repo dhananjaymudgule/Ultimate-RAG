@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     GEMINI_LLM_MODEL_NAME: str
     GEMINI_EMBEDDING_MODEL_NAME: str
 
+    # parameters
+    TOP_K: int
+
     # Base directory (Project root)
     BASE_DIR: Path = Path(__file__).resolve().parents[3]  # Go 4 levels up
     logger.info(f"BASE_DIR: {BASE_DIR}")
@@ -38,9 +41,17 @@ class Settings(BaseSettings):
     RAG_RESULTS_CSV: Path = LOGS_DIR / "rag_results.csv"
     LATENCY_CSV: Path = LOGS_DIR / "retrieval_generation_times.csv"
 
+    # chroma db
+    VECTOR_STORE_BASE_DIR: Path = Path(__file__).resolve().parents[1]  # Go 1 levels up
+    logger.info(f"VECTOR STORE BASE_DIR: {VECTOR_STORE_BASE_DIR}")
+    VECTOR_STORE: Path = VECTOR_STORE_BASE_DIR / "vector_stores"
+    CHROMA_DB_PATH : Path = VECTOR_STORE / "chroma_db"
+
+
+
     # config.json
     CORE_BASE_DIR: Path = Path(__file__).resolve().parents[0]  # Go 0 levels up
-    print(f"CORE BASE DIR: {CORE_BASE_DIR}")
+    logger.info(f"CORE BASE DIR: {CORE_BASE_DIR}")
     CONFIG_JSON_PATH : Path = CORE_BASE_DIR / "config.json"
 
     class Config:

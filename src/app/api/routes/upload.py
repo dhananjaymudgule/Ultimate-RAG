@@ -8,7 +8,7 @@ from src.app.core.config import settings
 from src.app.utils.logger import logger
 
 from src.app.services.file_handler import process_uploaded_file  
-from src.app.services.vector_store import store_document_embeddings  
+from src.app.services.retrieval_service import store_document_embeddings  
 
 
 

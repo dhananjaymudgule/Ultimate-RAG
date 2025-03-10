@@ -21,8 +21,8 @@ def get_llm():
             max_output_tokens=8192,
             timeout=None,
             max_retries=2,
-            top_p=1,
-            top_k=32
+            top_p=0.5,
+            top_k=5
         )
        
     return llm
@@ -55,7 +55,7 @@ def generate_response(question: str) -> dict:
         response = llm.invoke(formatted_prompt)
 
         # Log query, context, and answer
-        log_query(retriever = "pinecone",
+        log_query(retriever = "",
                   generator = settings.GEMINI_LLM_MODEL_NAME, 
                   question = question, 
                   retrieved_context = docs_content, 

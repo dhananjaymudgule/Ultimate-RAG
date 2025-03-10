@@ -1,88 +1,77 @@
 # src/app/services/retrieval_service.py
 
-from langchain_chroma import Chroma
-from langchain_community.vectorstores import FAISS
-from langchain_core.documents import Document
 
-from typing import List, Dict, Optional
-
-from src.app.services.vector_store import pc_vector_store  
+from src.app.services.embedding_service import get_embedding_model
 from src.app.core.config import settings
 from src.app.utils.logger import logger
 
-search_type = "similarity"
-
-
 import json
 from pathlib import Path
+from uuid import uuid4
+from typing import List, Dict, Optional
 
-CONFIG_JSON_PATH = Path("D:/Dhananjay/Pro/MyIdea/Ultimate-RAG/streamlit_app/config.json")
+from langchain_core.documents import Document
+from langchain_chroma import Chroma
 
-def load_config():
-    if CONFIG_JSON_PATH.exists():
-        with open(CONFIG_JSON_PATH, "r") as f:
-            return json.load(f)
-    return {"top_k": 2, "similarity_threshold": 0.75}  # Default values
+google_embedding_model = get_embedding_model()
 
-# Load parameters
-config = load_config()
 
-# Use them in your retrieval/generation process
-top_k = config["top_k"]
-similarity_threshold = config["similarity_threshold"]
+def intitialise_vector_store():
 
-logger.info(f"Using Top-K: {top_k}, Similarity Threshold: {similarity_threshold}")
+    chroma_vector_store = Chroma(
+        collection_name="career_advisory_service",
+        embedding_function=google_embedding_model,
+        persist_directory=str(settings.CHROMA_DB_PATH),  
+    )
 
+    return chroma_vector_store
+
+# initialise vector db
+chroma_vector_db = intitialise_vector_store()
 
 # get the correct retriever 
-def get_retriever(retriever_name: str):
-    
+def get_retriever():
+    """vector store retirival"""
+    chroma_retriver =  chroma_vector_db.as_retriever(
+                search_type="similarity",
+                search_kwargs={"k": settings.TOP_K}
+                )
+
+    logger.info(f" Using Top-K: {settings.TOP_K}")
+                
+    return chroma_retriver
+
+
+# store documents embeddings to vector db
+def store_document_embeddings(docs_with_metadata):
+    """
+    Extracts text from the document, generates embeddings, and stores them in Pinecone.
+    """
     try:
-        if retriever_name == "pinecone":
-            if search_type == "similarity_score_threshold":
-                retriever = pc_vector_store.as_retriever(
-                    search_type="similarity_score_threshold",
-                    search_kwargs={'score_threshold': similarity_threshold, "k": top_k}
-                    )
-            else:
-                retriever = pc_vector_store.as_retriever(
-                search_type="similarity",
-                search_kwargs={"k": 3}
-            )
-            return retriever
+        #  Generate unique UUIDs for each document
+        uuids = [str(uuid4()) for _ in range(len(docs_with_metadata))]
+
+        #  Store in Pinecone
+        embedding_result = chroma_vector_db.add_documents(documents=docs_with_metadata, ids=uuids)
         
-        elif retriever_name == "chroma":
-            chroma_vector_db = Chroma(
-                collection_name="career_advisory",
-                embedding_function=settings.EMBEDDING_MODEL
-            )
-            return chroma_vector_db.as_retriever(
-                search_type="similarity",
-                search_kwargs={"k": 3}
-            )
-        elif retriever_name == "faiss":
-            faiss_vector_db = FAISS.load_local("faiss_index", settings.EMBEDDING_MODEL)
-            return faiss_vector_db.as_retriever(
-                search_type="similarity",
-                search_kwargs={"k": 3}
-            )
-        
+        return {"message": "Embeddings stored successfully!", "total_docs": len(docs_with_metadata),
+                "embedding_result":embedding_result}
     except Exception as e:
-        logger.error(f"Error retrieving : {str(e)}", exc_info=True)
-        raise ValueError(f"Retriever `{retriever_name}` not supported")
+        logger.error(f"Error  : {str(e)}", exc_info=True)
+
+        return {"error": str(e)}
+    
 
 
-
-#  `retrieve_documents()` function
+# Retrive Docuements
 def retrieve_documents(question: str, 
-                       filters: Optional[Dict] = None, 
-                       retriever_name: str = "pinecone") -> List[Document]:
+                       filters: Optional[Dict] = None) -> List[Document]:
     """
     Retrieves relevant documents from the specified vector store.
     """
     try:
-        retriever = get_retriever(retriever_name)
-        retrieved_docs = retriever.invoke(question, filter=filters if filters else {})
+        retriever = get_retriever()
+        retrieved_docs = retriever.invoke(question)
         return retrieved_docs
     except Exception as e:
         logger.error(f"Error retrieving documents '{question}': {str(e)}", exc_info=True)
@@ -90,11 +79,12 @@ def retrieve_documents(question: str,
         return f"Error retrieving documents: {str(e)}"
 
 
-# retriever = vector_store.as_retriever(
-#     search_type="mmr",
-#     search_kwargs={"k": 1, "fetch_k": 2, "lambda_mult": 0.5},
-# )
-# retriever.invoke("thud")
 
-# # Only retrieve documents that have a relevance score
-# Above a certain threshold
+
+
+if __name__ == "__main__":
+    
+    retriever = get_retriever()
+    print(retriever)
+
+

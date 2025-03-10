@@ -22,55 +22,11 @@ ALLOWED_EXTENSIONS = ["json", "pdf", "txt", "jpg", "jpeg", "png", "docx", "csv",
 
 st.set_page_config(page_title="Ultimate RAG", layout="wide",  page_icon="🤖")
 
-st.title("🤖 Ultimate RAG")
+st.title("🤖 Career Advisory Service")
 
-st.sidebar.title("⚙️ Application Settings")
+st.sidebar.title(" 🎓 Career Advisory AI")
 
-
-# Define JSON file path
-CONFIG_JSON_PATH  = Path("config.json")
-
-# Function to load existing config or create a default one
-def load_config():
-    if CONFIG_JSON_PATH.exists():
-        with open(CONFIG_JSON_PATH, "r") as f:
-            return json.load(f)
-    return {"top_k": 2, "similarity_threshold": 0.75}  # Default values
-
-
-# Function to save updated config
-def save_config(config):
-    with open(CONFIG_JSON_PATH, "w") as f:
-        json.dump(config, f, indent=4)
-
-# Load existing config
-config = load_config()
-
-
-# Sidebar controls
-top_k = st.sidebar.slider("🔝 Top-K Results", min_value=1, max_value=10, value=config["top_k"])
-similarity_threshold = st.sidebar.slider(
-    "📐 Similarity Threshold",
-    min_value=0.5,
-    max_value=1.0,
-    value=config["similarity_threshold"],
-    step=0.01,
-    format="%.2f"
-)
-
-# Update and save config if values change
-if top_k != config["top_k"] or similarity_threshold != config["similarity_threshold"]:
-    config["top_k"] = top_k
-    config["similarity_threshold"] = similarity_threshold
-    save_config(config)
-
-st.sidebar.write(f"**Current Settings:**\n- Top-K: {top_k}\n- Similarity Threshold: {similarity_threshold:.2f}")
-
-
-# st.sidebar.write(f"Current Similarity Threshold: **{similarity_threshold:.2f}**")
-
-# temperature = st.sidebar.slider("🌡️ LLM Temperature", min_value=0.0, max_value=1.0, value=0.0)
-
+st.sidebar.markdown("**🔝 AI-powered job mentoring**\n\nHelping you find the best career paths! 🚀")
 
 
 # Tabs for different functionalities
@@ -95,7 +51,10 @@ with tab1:
             answer = response.json()["response"]
             context = response.json()["retrieved_context"]
 
-            st.write(f"**AI Response:** {answer}")
+            st.write(f"**AI Response:** {answer} \n\n\n")
+
+            st.markdown("---")  # Adds a horizontal line
+
 
             with st.expander("Please click here to view context"):
                 st.write(context)

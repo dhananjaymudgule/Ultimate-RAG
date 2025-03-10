@@ -3,7 +3,7 @@
 from pathlib import Path
 from src.app.utils.logger import logger
 
-from src.app.services.file_processors.json_processor import convert_json_to_doc
+from src.app.services.file_processors.json_processor import JobProfileParser
 
 def process_uploaded_file(file_path: Path):
     """
@@ -13,7 +13,9 @@ def process_uploaded_file(file_path: Path):
     file_extension = file_path.suffix.lower()
 
     if file_extension == ".json":
-        return convert_json_to_doc(file_path)
+        parser = JobProfileParser(file_path)
+        documents = parser.convert_to_documents()
+        return documents
     elif file_extension == ".pdf":
         raise NotImplementedError("PDF processing not implemented yet.")
     elif file_extension == ".csv":

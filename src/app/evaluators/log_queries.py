@@ -30,9 +30,9 @@ def log_query(retriever: str, generator: str, question: str, retrieved_context: 
             "timestamp": datetime.now().isoformat(sep=' ', timespec='seconds'),
             "retriever": retriever,
             "generator": generator,
-            "question": question.strip(),  # Strip unnecessary spaces
-            "retrieved_context": retrieved_context.strip(),
-            "generated_answer": generated_answer.strip(),
+            "question": question,  # Strip unnecessary spaces
+            "retrieved_context": retrieved_context,
+            "generated_answer": generated_answer,
         }])
 
         # Append new entry to CSV (creates file if missing)
